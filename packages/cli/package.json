@@ -2,6 +2,29 @@
   "name": "playwright-bot",
   "version": "0.1.0",
   "description": "AI-powered Playwright test generator CLI",
+  "author": "Marantha Tech <https://github.com/MaranathaTech>",
+  "homepage": "https://github.com/MaranathaTech/playwright-bot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaranathaTech/playwright-bot.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/MaranathaTech/playwright-bot/issues"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "test-generation",
+    "ai",
+    "automation",
+    "e2e",
+    "end-to-end",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "module",
   "bin": {
     "playwright-bot": "./dist/index.js"

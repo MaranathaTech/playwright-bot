@@ -2,6 +2,28 @@
   "name": "@playwright-bot/react-panel",
   "version": "0.1.0",
   "description": "React dev panel for playwright-bot",
+  "author": "Marantha Tech <https://github.com/MaranathaTech>",
+  "homepage": "https://github.com/MaranathaTech/playwright-bot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaranathaTech/playwright-bot.git",
+    "directory": "packages/react-panel"
+  },
+  "bugs": {
+    "url": "https://github.com/MaranathaTech/playwright-bot/issues"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "react",
+    "devtools",
+    "panel",
+    "ai",
+    "automation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
