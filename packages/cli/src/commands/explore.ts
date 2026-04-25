@@ -1,5 +1,5 @@
-import { Explorer, defineConfig, TestWriter, createProvider } from '@playwright-bot/core';
-import type { PlaywrightBotConfig } from '@playwright-bot/core';
+import { Explorer, defineConfig, TestWriter, createProvider } from '@playwright-ai-bot/core';
+import type { PlaywrightBotConfig } from '@playwright-ai-bot/core';
 import { loadConfig } from '../config-loader.js';
 import { ConsoleReporter } from '../reporter.js';
 

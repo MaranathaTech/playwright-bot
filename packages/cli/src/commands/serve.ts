@@ -1,6 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import { Explorer, defineConfig, createProvider, TestWriter } from '@playwright-bot/core';
-import type { PlaywrightBotConfig, PageAnalysis, UserFlow } from '@playwright-bot/core';
+import { Explorer, defineConfig, createProvider, TestWriter } from '@playwright-ai-bot/core';
+import type { PlaywrightBotConfig, PageAnalysis, UserFlow } from '@playwright-ai-bot/core';
 import { loadConfig } from '../config-loader.js';
 import chalk from 'chalk';
 

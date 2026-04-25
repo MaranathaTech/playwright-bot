@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
-import type { PlaywrightBotConfig } from '@playwright-bot/core';
+import type { PlaywrightBotConfig } from '@playwright-ai-bot/core';
 
 const CONFIG_FILES = [
   'playwright-bot.config.ts',

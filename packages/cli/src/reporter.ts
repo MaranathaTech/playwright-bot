@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import type { PlaywrightBotConfig } from '@playwright-bot/core';
+import type { PlaywrightBotConfig } from '@playwright-ai-bot/core';
 
 export class ConsoleReporter {
   private spinner = ora();

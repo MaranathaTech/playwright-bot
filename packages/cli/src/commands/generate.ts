@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
-import { createProvider, TestWriter } from '@playwright-bot/core';
-import type { PageAnalysis, UserFlow } from '@playwright-bot/core';
+import { createProvider, TestWriter } from '@playwright-ai-bot/core';
+import type { PageAnalysis, UserFlow } from '@playwright-ai-bot/core';
 import chalk from 'chalk';
 
 interface GenerateOptions {

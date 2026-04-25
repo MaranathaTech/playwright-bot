@@ -2,7 +2,7 @@ import { writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import chalk from 'chalk';
 
-const CONFIG_TEMPLATE = `import { defineConfig } from '@playwright-bot/core';
+const CONFIG_TEMPLATE = `import { defineConfig } from '@playwright-ai-bot/core';
 
 export default defineConfig({
   baseUrl: 'https://example.com',

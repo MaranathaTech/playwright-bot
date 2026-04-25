@@ -1,5 +1,5 @@
 {
-  "name": "@playwright-bot/core",
+  "name": "@playwright-ai-bot/core",
   "version": "0.1.0",
   "description": "AI-powered Playwright test generation engine",
   "author": "Marantha Tech <https://github.com/MaranathaTech>",

@@ -78,7 +78,7 @@ npx playwright-bot serve --port 3100
 Create a `playwright-bot.config.ts` in your project root:
 
 ```typescript
-import { defineConfig } from '@playwright-bot/core';
+import { defineConfig } from '@playwright-ai-bot/core';
 
 export default defineConfig({
   baseUrl: 'https://myapp.example.com',
@@ -112,7 +112,7 @@ export default defineConfig({
 Add the dev panel to your React application for real-time exploration visualization:
 
 ```tsx
-import { PlaywrightBotDevtools } from '@playwright-bot/react-panel';
+import { PlaywrightBotDevtools } from '@playwright-ai-bot/react-panel';
 
 function App() {
   return (
@@ -136,9 +136,9 @@ npx playwright-bot serve --port 3100
 
 | Package | Description |
 |---------|-------------|
-| `@playwright-bot/core` | Engine, AI providers, exploration, code generation |
+| `@playwright-ai-bot/core` | Engine, AI providers, exploration, code generation |
 | `playwright-bot` | CLI interface |
-| `@playwright-bot/react-panel` | React dev panel components |
+| `@playwright-ai-bot/react-panel` | React dev panel components |
 
 ## AI Providers
 

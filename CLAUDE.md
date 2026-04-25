@@ -12,11 +12,11 @@ pnpm test                                     # Run all tests
 pnpm dev                                      # Watch mode for all packages
 
 # Single package
-pnpm --filter @playwright-bot/core build
-pnpm --filter @playwright-bot/core test
-pnpm --filter @playwright-bot/core test -- crawler.test.ts      # Single test file
-pnpm --filter @playwright-bot/core test -- --watch              # Watch mode
-pnpm --filter @playwright-bot/core test -- -t "should visit"    # Single test by name
+pnpm --filter @playwright-ai-bot/core build
+pnpm --filter @playwright-ai-bot/core test
+pnpm --filter @playwright-ai-bot/core test -- crawler.test.ts      # Single test file
+pnpm --filter @playwright-ai-bot/core test -- --watch              # Watch mode
+pnpm --filter @playwright-ai-bot/core test -- -t "should visit"    # Single test by name
 ```
 
 Turborepo task order: `build` depends on `^build` (upstream packages first), `typecheck` depends on `^build`, `test` depends on `build`. Always run `pnpm build` before `pnpm typecheck`.
@@ -25,9 +25,9 @@ Turborepo task order: `build` depends on `^build` (upstream packages first), `ty
 
 **Monorepo** (pnpm workspaces + Turborepo) with three packages:
 
-- **`@playwright-bot/core`** (`packages/core/`) — Engine library
+- **`@playwright-ai-bot/core`** (`packages/core/`) — Engine library
 - **`playwright-bot`** (`packages/cli/`) — CLI (depends on core)
-- **`@playwright-bot/react-panel`** (`packages/react-panel/`) — React dev panel (standalone, connects via WebSocket)
+- **`@playwright-ai-bot/react-panel`** (`packages/react-panel/`) — React dev panel (standalone, connects via WebSocket)
 
 ### Core data flow
 

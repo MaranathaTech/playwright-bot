@@ -38,7 +38,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@playwright-bot/core": "workspace:*",
+    "@playwright-ai-bot/core": "workspace:*",
     "chalk": "^5.4.0",
     "commander": "^13.0.0",
     "jiti": "^2.4.0",
