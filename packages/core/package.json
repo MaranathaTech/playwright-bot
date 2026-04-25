@@ -1,6 +1,6 @@
 {
   "name": "@playwright-ai-bot/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AI-powered Playwright test generation engine",
   "author": "Marantha Tech <https://github.com/MaranathaTech>",
   "homepage": "https://github.com/MaranathaTech/playwright-bot#readme",
@@ -34,7 +34,7 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
