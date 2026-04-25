@@ -1,0 +1,33 @@
+{
+  "name": "playwright-bot",
+  "version": "0.1.0",
+  "description": "AI-powered Playwright test generator CLI",
+  "type": "module",
+  "bin": {
+    "playwright-bot": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@playwright-bot/core": "workspace:*",
+    "chalk": "^5.4.0",
+    "commander": "^13.0.0",
+    "jiti": "^2.4.0",
+    "ora": "^8.1.0",
+    "playwright-core": "^1.50.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "@types/ws": "^8.5.0"
+  },
+  "license": "MIT"
+}

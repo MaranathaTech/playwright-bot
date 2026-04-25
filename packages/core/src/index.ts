@@ -1,0 +1,10 @@
+export { BrowserManager } from './browser/browser-manager.js';
+export { PageCapture } from './browser/page-capture.js';
+export { Interaction } from './browser/interaction.js';
+export type { AIProvider, PageElementAnalysis, ActionDecision, PageAnalysis, UserFlow, FlowStep } from './ai/provider.js';
+export { createProvider } from './ai/provider.js';
+export { Explorer } from './explorer/explorer.js';
+export { Crawler } from './explorer/crawler.js';
+export { TestWriter } from './codegen/test-writer.js';
+export type { PlaywrightBotConfig } from './config.js';
+export { defineConfig, defaultConfig } from './config.js';

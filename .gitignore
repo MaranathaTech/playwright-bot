@@ -1,0 +1,29 @@
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Session artifacts
+todo.md
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# Coverage
+coverage/
