@@ -2,6 +2,8 @@ import { Command } from 'commander';
 import { exploreCommand } from './commands/explore.js';
 import { initCommand } from './commands/init.js';
 import { generateCommand } from './commands/generate.js';
+import { generatePageCommand } from './commands/generate-page.js';
+import { checkCommand } from './commands/check.js';
 import { serveCommand } from './commands/serve.js';
 
 export function createProgram(): Command {
@@ -10,7 +12,7 @@ export function createProgram(): Command {
   program
     .name('playwright-bot')
     .description('AI-powered Playwright test generator')
-    .version('0.1.0');
+    .version('0.2.0');
 
   program
     .command('explore <url>')
@@ -40,6 +42,33 @@ export function createProgram(): Command {
     .option('--provider <provider>', 'AI provider', 'anthropic')
     .option('--model <model>', 'Override model name')
     .action(generateCommand);
+
+  program
+    .command('generate-page <url>')
+    .description('Analyze a single URL and generate its test')
+    .option('--depth <depth>', 'Exploration depth (1 or 2)', '1')
+    .option('--output <dir>', 'Output directory for test files', './tests/generated')
+    .option('--provider <provider>', 'AI provider (anthropic, openai, ollama)', 'anthropic')
+    .option('--model <model>', 'Override model name')
+    .option('--headed', 'Show browser window', false)
+    .option('--auth-state <path>', 'Path to storageState.json')
+    .option('--update', 'Overwrite existing test file', false)
+    .option('--dry-run', 'Analyze without writing files', false)
+    .option('--config <path>', 'Path to config file')
+    .action(generatePageCommand);
+
+  program
+    .command('check [url]')
+    .description('Check test freshness against live ARIA snapshots')
+    .option('--output <dir>', 'Output directory for test files', './tests/generated')
+    .option('--provider <provider>', 'AI provider — used with --fix', 'anthropic')
+    .option('--model <model>', 'Override model name')
+    .option('--headed', 'Show browser window', false)
+    .option('--auth-state <path>', 'Path to storageState.json')
+    .option('--fix', 'Auto-regenerate stale tests', false)
+    .option('--threshold <n>', 'Similarity threshold 0-1', '0.9')
+    .option('--config <path>', 'Path to config file')
+    .action(checkCommand);
 
   program
     .command('serve')

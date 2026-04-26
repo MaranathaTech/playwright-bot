@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import type { PlaywrightBotConfig } from '@playwright-ai-bot/core';
+import type { PlaywrightBotConfig, CheckResult } from '@playwright-ai-bot/core';
 
 export class ConsoleReporter {
   private spinner = ora();
@@ -66,6 +66,69 @@ export class ConsoleReporter {
 
   error(error: Error): void {
     this.spinner.fail(chalk.red(error.message));
+  }
+
+  pageGenerateStart(url: string, update: boolean): void {
+    console.log('');
+    console.log(chalk.bold('playwright-bot generate-page'));
+    console.log('');
+    console.log(`  URL:    ${chalk.cyan(url)}`);
+    console.log(`  Mode:   ${update ? chalk.yellow('update') : chalk.green('new')}`);
+    console.log('');
+  }
+
+  checkStart(url?: string): void {
+    console.log('');
+    console.log(chalk.bold('playwright-bot check'));
+    console.log('');
+    if (url) {
+      console.log(`  URL: ${chalk.cyan(url)}`);
+    } else {
+      console.log(`  Checking ${chalk.cyan('all')} manifest entries`);
+    }
+    console.log('');
+  }
+
+  checkResult(result: CheckResult): void {
+    const similarity = `${Math.round(result.similarity * 100)}%`;
+
+    switch (result.status) {
+      case 'fresh':
+        console.log(`  ${chalk.green('OK')}      ${result.url} (${similarity})`);
+        break;
+      case 'stale':
+        console.log(`  ${chalk.yellow('STALE')}   ${result.url} (${similarity}) — ${result.changeSummary}`);
+        break;
+      case 'missing':
+        console.log(`  ${chalk.red('MISSING')} ${result.url}`);
+        break;
+      case 'error':
+        console.log(`  ${chalk.red('ERROR')}   ${result.url} — ${result.error}`);
+        break;
+    }
+  }
+
+  checkSummary(results: CheckResult[]): void {
+    const fresh = results.filter((r) => r.status === 'fresh').length;
+    const stale = results.filter((r) => r.status === 'stale').length;
+    const missing = results.filter((r) => r.status === 'missing').length;
+    const errors = results.filter((r) => r.status === 'error').length;
+
+    console.log('');
+    console.log(chalk.bold('Summary'));
+    console.log(`  Fresh:   ${chalk.green(String(fresh))}`);
+    if (stale > 0) console.log(`  Stale:   ${chalk.yellow(String(stale))}`);
+    if (missing > 0) console.log(`  Missing: ${chalk.red(String(missing))}`);
+    if (errors > 0) console.log(`  Errors:  ${chalk.red(String(errors))}`);
+    console.log('');
+  }
+
+  fixStart(url: string): void {
+    this.spinner.start(`Regenerating test for ${chalk.cyan(url)}`);
+  }
+
+  fixComplete(url: string): void {
+    this.spinner.succeed(`Regenerated test for ${chalk.cyan(url)}`);
   }
 }
 

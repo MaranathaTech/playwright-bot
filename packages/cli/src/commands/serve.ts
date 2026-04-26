@@ -1,6 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import { Explorer, defineConfig, createProvider, TestWriter } from '@playwright-ai-bot/core';
-import type { PlaywrightBotConfig, PageAnalysis, UserFlow } from '@playwright-ai-bot/core';
+import { Explorer, defineConfig, createProvider, TestWriter, ManifestManager, urlToFilename } from '@playwright-ai-bot/core';
+import type { PlaywrightBotConfig, PageAnalysis, UserFlow, ManifestEntry } from '@playwright-ai-bot/core';
 import { loadConfig } from '../config-loader.js';
 import chalk from 'chalk';
 
@@ -101,6 +101,24 @@ async function handleMessage(
         const flowTests = await writer.generateFromFlows(result.flows);
         const allTests = [...pageTests, ...flowTests];
         await writer.writeTests(allTests);
+
+        // Update manifest
+        const manifest = new ManifestManager(config.output.dir);
+        const manifestEntries: ManifestEntry[] = allTests.map((test) => {
+          const page = result.pages.find((p: PageAnalysis) => p.url === test.url);
+          const slug = urlToFilename(test.url);
+          return {
+            filePath: test.source === 'flow'
+              ? `flows/${test.filePath.split('/').pop()!}`
+              : `${slug}.spec.ts`,
+            url: test.url,
+            source: test.source,
+            ariaSnapshot: page?.ariaSnapshot ?? '',
+            generatedAt: new Date().toISOString(),
+            slug,
+          };
+        });
+        await manifest.addEntries(manifestEntries);
 
         send(ws, 'complete', {
           pagesExplored: result.pagesExplored,

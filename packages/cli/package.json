@@ -1,6 +1,6 @@
 {
   "name": "playwright-bot",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "AI-powered Playwright test generator CLI",
   "author": "Marantha Tech <https://github.com/MaranathaTech>",
   "homepage": "https://github.com/MaranathaTech/playwright-bot#readme",

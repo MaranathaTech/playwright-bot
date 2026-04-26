@@ -1,27 +1,33 @@
-import { Explorer, defineConfig, TestWriter, createProvider, ManifestManager, urlToFilename } from '@playwright-ai-bot/core';
+import {
+  Explorer,
+  defineConfig,
+  TestWriter,
+  createProvider,
+  ManifestManager,
+  urlToFilename,
+} from '@playwright-ai-bot/core';
 import type { PlaywrightBotConfig, ManifestEntry } from '@playwright-ai-bot/core';
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { loadConfig } from '../config-loader.js';
 import { ConsoleReporter } from '../reporter.js';
 
-interface ExploreOptions {
+interface GeneratePageOptions {
   depth: string;
-  maxPages: string;
   output: string;
   provider: string;
   model?: string;
   headed: boolean;
   authState?: string;
-  include?: string;
-  exclude?: string;
+  update: boolean;
   dryRun: boolean;
   config?: string;
 }
 
-export async function exploreCommand(url: string, options: ExploreOptions): Promise<void> {
+export async function generatePageCommand(url: string, options: GeneratePageOptions): Promise<void> {
   const reporter = new ConsoleReporter();
 
   try {
-    // Load config file if present, merge with CLI options
     const fileConfig = await loadConfig(options.config);
 
     const config = defineConfig({
@@ -35,9 +41,7 @@ export async function exploreCommand(url: string, options: ExploreOptions): Prom
       explore: {
         ...fileConfig?.explore,
         depth: parseInt(options.depth, 10) as 1 | 2,
-        maxPages: parseInt(options.maxPages, 10),
-        include: options.include?.split(',').map((s) => s.trim()),
-        exclude: options.exclude?.split(',').map((s) => s.trim()),
+        maxPages: 1,
       },
       browser: {
         ...fileConfig?.browser,
@@ -53,11 +57,21 @@ export async function exploreCommand(url: string, options: ExploreOptions): Prom
       },
     });
 
-    reporter.start(config);
+    // Check if test file already exists
+    const slug = urlToFilename(url);
+    const testFilePath = join(config.output.dir, `${slug}.spec.ts`);
+
+    if (!options.update && existsSync(testFilePath)) {
+      reporter.error(
+        new Error(`Test file already exists: ${testFilePath}\nUse --update to overwrite.`),
+      );
+      process.exit(1);
+    }
+
+    reporter.pageGenerateStart(url, options.update);
 
     const explorer = new Explorer(config);
 
-    // Wire up events
     explorer.on('page:start', (pageUrl: string, index: number) => {
       reporter.pageStart(pageUrl, index);
     });
@@ -78,12 +92,7 @@ export async function exploreCommand(url: string, options: ExploreOptions): Prom
       reporter.flowComplete();
     });
 
-    explorer.on('progress', (visited: number, total: number) => {
-      reporter.progress(visited, total);
-    });
-
-    // Run exploration
-    const result = await explorer.explore(url);
+    const result = await explorer.analyzePage(url);
 
     // Generate tests
     reporter.generatingTests();
@@ -102,13 +111,10 @@ export async function exploreCommand(url: string, options: ExploreOptions): Prom
 
       // Update manifest
       const manifest = new ManifestManager(config.output.dir);
-      const manifestEntries: ManifestEntry[] = allTests.map((test) => {
+      const entries: ManifestEntry[] = allTests.map((test) => {
         const page = result.pages.find((p) => p.url === test.url);
-        const slug = urlToFilename(test.url);
         return {
-          filePath: test.source === 'flow'
-            ? `flows/${test.filePath.split('/').pop()!}`
-            : `${slug}.spec.ts`,
+          filePath: `${slug}.spec.ts`,
           url: test.url,
           source: test.source,
           ariaSnapshot: page?.ariaSnapshot ?? '',
@@ -116,33 +122,7 @@ export async function exploreCommand(url: string, options: ExploreOptions): Prom
           slug,
         };
       });
-      await manifest.addEntries(manifestEntries);
-    }
-
-    // Save report
-    if (config.output.saveReport && !options.dryRun) {
-      const { writeFile, mkdir } = await import('fs/promises');
-      const { join } = await import('path');
-      const reportDir = join(config.output.dir, '.reports');
-      await mkdir(reportDir, { recursive: true });
-
-      // Serialize without screenshot buffers for JSON
-      const serializableResult = {
-        ...result,
-        pages: result.pages.map((p) => ({
-          ...p,
-          screenshot: undefined,
-          ariaSnapshot: p.ariaSnapshot,
-        })),
-        flows: result.flows.map((f) => ({
-          ...f,
-          steps: f.steps.map((s) => ({ ...s, screenshot: undefined })),
-        })),
-      };
-      await writeFile(
-        join(reportDir, `report-${Date.now()}.json`),
-        JSON.stringify(serializableResult, null, 2),
-      );
+      await manifest.addEntries(entries);
     }
 
     reporter.complete(result.pagesExplored, allTests.length, result.duration, options.dryRun);

@@ -150,6 +150,74 @@ export class Explorer extends EventEmitter {
     }
   }
 
+  async analyzePage(url: string): Promise<ExplorationResult> {
+    const startTime = Date.now();
+    this.provider = await createProvider(this.config.ai);
+
+    const context = await this.browserManager.launch();
+    const authHandler = new AuthHandler(this.config.auth);
+    await authHandler.setup(context);
+
+    const pageAnalyzer = new PageAnalyzer(this.provider);
+    const flowExplorer = new FlowExplorer(this.provider, {
+      maxSteps: this.config.explore.maxStepsPerFlow,
+    });
+
+    const pages: PageAnalysis[] = [];
+    const flows: UserFlow[] = [];
+
+    try {
+      this.emit('page:start', url, 0);
+      const page = await context.newPage();
+
+      await page.goto(url, {
+        waitUntil: 'domcontentloaded',
+        timeout: this.config.browser.timeout,
+      });
+
+      const analysis = await pageAnalyzer.analyze(page);
+      pages.push(analysis);
+
+      this.emit('page:complete', analysis, 0);
+      this.emit('progress', 1, 1);
+
+      // Level 2: Flow exploration
+      if (this.config.explore.depth >= 2 && analysis.elementAnalysis.testScenarios.length > 0) {
+        for (const scenario of analysis.elementAnalysis.testScenarios) {
+          if (this.isStopped) break;
+          if (scenario.priority !== 'high') continue;
+
+          this.emit('flow:start', scenario.name);
+
+          await page.goto(url, {
+            waitUntil: 'domcontentloaded',
+            timeout: this.config.browser.timeout,
+          });
+
+          const flow = await flowExplorer.explore(page, scenario.description);
+          flows.push(flow);
+
+          this.emit('flow:complete', flow);
+        }
+      }
+
+      await page.close();
+
+      const result: ExplorationResult = {
+        pages,
+        flows,
+        startUrl: url,
+        duration: Date.now() - startTime,
+        pagesExplored: pages.length,
+      };
+
+      this.emit('complete', result);
+      return result;
+    } finally {
+      await this.browserManager.close();
+    }
+  }
+
   pause(): void {
     this.isPaused = true;
   }
