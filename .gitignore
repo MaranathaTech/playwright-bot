@@ -27,3 +27,6 @@ playwright-report/
 
 # Coverage
 coverage/
+
+# npm tarballs
+*.tgz
